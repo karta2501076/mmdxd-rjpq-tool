@@ -5,55 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>羅茱助手：真・多人同步</title>
     <style>
-        /* 基礎暗色風格設定 (優化：垂直佈局，置中) */
-        body { font-family: sans-serif; background: #1a1a21; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 0; overflow: hidden; }
-        .container { background: #2d2d37; padding: 10px; border-radius: 12px; width: 340px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; }
-        h2 { margin: 5px 0 10px 0; color: #fff; font-size: 1.2rem; }
+        /* 基礎暗色風格設定 (優化：UI 放大 1.2 倍) */
+        body { font-family: 'Segoe UI', sans-serif; background: #1a1a21; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 0; overflow: hidden; font-size: 1.2rem; }
+        .container { background: #2d2d37; padding: 15px; border-radius: 15px; width: 380px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; }
+        h2 { margin: 5px 0 15px 0; color: #fff; font-size: 1.5rem; text-align: center; }
         
-        /* 1. 開始畫面 (優化：垂直排列，縮小間隔) */
-        #startView { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+        /* 1. 開始畫面 (優化：放大按鈕與文字) */
+        #startView { display: flex; flex-direction: column; align-items: center; gap: 10px; }
 
-        /* 2. 建立/加入畫面 (優化：垂直排列，縮小間隔) */
-        #createView, #joinView { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        /* 2. 建立/加入畫面 */
+        #createView, #joinView { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 
-        /* 3. 暱稱畫面 (優化：垂直排列，縮小間隔) */
-        #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+        /* 3. 暱稱畫面 */
+        #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 
-        /* 4. 遊戲主畫面 (優化：固定寬度) */
+        /* 4. 遊戲主畫面 (優化：寬度放大) */
         #mainGameView { width: 100%; display: flex; flex-direction: column; align-items: center; }
 
-        /* 輸入框與基礎按鈕 (優化：縮小尺寸) */
-        input { width: 90%; padding: 6px; border-radius: 6px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 0.9rem; }
-        button { border-radius: 6px; border: none; cursor: pointer; font-weight: bold; font-size: 0.9rem; transition: 0.2s; white-space: nowrap; }
-        .primary-btn { background: #007bff; color: white; width: 100%; padding: 8px; margin: 0; }
+        /* 輸入框與基礎按鈕 (優化：放大尺寸與文字) */
+        input { width: 90%; padding: 8px; border-radius: 8px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.1rem; }
+        button { border-radius: 8px; border: none; cursor: pointer; font-weight: bold; font-size: 1.1rem; transition: 0.2s; white-space: nowrap; }
+        .primary-btn { background: #007bff; color: white; width: 100%; padding: 10px; margin: 0; }
         .primary-btn:hover { background: #0056b3; }
-        .secondary-btn { background: #444; color: white; padding: 4px 8px; margin: 0; }
+        .secondary-btn { background: #444; color: white; padding: 6px 12px; margin: 0; }
 
-        /* 遊戲上方資訊列 (優化：調整間距) */
-        .header-info { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; font-size: 0.8rem; }
+        /* 遊戲上方資訊列 (優化：放大字體與間距) */
+        .header-info { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 1.1rem; }
         .room-code span { color: #f1c40f; font-weight: bold; }
-        .share-btn { padding: 4px 8px; font-size: 0.7rem; }
+        .share-btn { padding: 5px 10px; font-size: 0.9rem; }
+        .clear-btn { padding: 5px 10px; font-size: 0.9rem; }
 
-        /* 顏色選單 (優化：縮小按鈕尺寸) */
-        .color-bar { width: 100%; display: flex; gap: 6px; justify-content: center; align-items: center; background: #1a1a21; padding: 6px; border-radius: 8px; margin-bottom: 6px; }
-        .color-btn { width: 32px; height: 32px; border-radius: 8px; cursor: pointer; border: 2px solid transparent; }
+        /* 顏色選單 (優化：放大按鈕尺寸) */
+        .color-bar { width: 100%; display: flex; gap: 8px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 10px; margin-bottom: 8px; }
+        .color-btn { width: 42px; height: 42px; border-radius: 10px; cursor: pointer; border: 3px solid transparent; }
         .color-btn.selected { border-color: white; transform: scale(1.05); }
         .color-btn.taken { opacity: 0.15; cursor: not-allowed; }
-        .reset-btn { background: transparent; color: #888; border: 1px solid #444; padding: 2px 6px; font-size: 0.7rem; }
+        .reset-btn { background: transparent; color: #888; border: 1px solid #444; padding: 3px 8px; font-size: 0.9rem; }
 
         /* 表格樣式 (優化：縮小框框與間隔) */
-        table { width: 100%; border-spacing: 2px; table-layout: fixed; }
-        .floor-label { width: 30px; text-align: center; font-weight: bold; font-size: 0.8rem; color: #888; }
-        .p-btn { width: 100%; height: 26px; background: #3c3c46; border: none; border-radius: 6px; color: #fff; font-weight: bold; cursor: pointer; position: relative; font-size: 0.8rem; padding: 0; margin: 0; }
+        table { width: 100%; border-spacing: 3px; table-layout: fixed; }
+        .floor-label { width: 40px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #888; }
+        .p-btn { width: 100%; height: 36px; background: #3c3c46; border: none; border-radius: 8px; color: #fff !important; font-weight: bold; cursor: pointer; position: relative; font-size: 1.1rem; padding: 0; margin: 0; transition: background 0.2s; }
         .p-btn:hover { background: #4e4e5a; }
         
         /* 玩家暱稱標籤 (優化：對齊修正) */
-        .nickname-tag { position: absolute; bottom: 0px; width: 100%; left: 0; text-align: center; font-size: 0.6rem; font-weight: normal; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .nickname-tag { position: absolute; bottom: 0px; width: 100%; left: 0; text-align: center; font-size: 0.8rem; font-weight: normal; pointer-events: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .hidden { display: none !important; }
         
         /* 暱稱畫面專用連結 */
-        .share-url { font-size: 0.7rem; color: #888; word-break: break-all; margin-top: 5px; text-align: center; width: 90%; }
+        .share-url { font-size: 1rem; color: #888; word-break: break-all; margin-top: 8px; text-align: center; width: 90%; }
     </style>
 </head>
 <body>
@@ -89,7 +90,7 @@
     <div id="mainGameView" class="hidden">
         <div class="header-info">
             <div class="room-code">房間：<span id="activeRoomId">------</span></div>
-            <div style="display: flex; gap: 4px; align-items: center;">
+            <div style="display: flex; gap: 5px; align-items: center;">
                 <button class="share-btn secondary-btn" onclick="copyShareLink()">分享連結</button>
                 <button class="clear-btn secondary-btn" onclick="clearAllPlatforms()">清空平台</button>
             </div>
