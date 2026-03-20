@@ -1,4 +1,4 @@
-// Firebase 配置 (請保持你的資訊)
+// Firebase 配置
 const firebaseConfig = {
   apiKey: "AIzaSyCpJmhpPRxgTSTpZi38DHCaV8ZaLhuKKTc",
   authDomain: "rjpq-tool-2ee82.firebaseapp.com",
@@ -17,13 +17,12 @@ let currentRoomId = null;
 let myNickname = "";
 let myColor = null;
 
-// 初始化檢查：是否有分享連結帶來的房號？
+// 自動偵測網址分享參數
 window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const roomFromUrl = urlParams.get('room');
-    if (roomFromUrl) {
-        // 如果網址有房號，直接跳到暱稱輸入畫面
-        currentRoomId = roomFromUrl;
+    const params = new URLSearchParams(window.location.search);
+    const room = params.get('room');
+    if (room) {
+        currentRoomId = room;
         showView('nicknameView');
     }
 };
@@ -41,10 +40,10 @@ function showView(viewId) {
 
 function createRoom() {
     const pwd = document.getElementById('createPwd').value;
-    if (pwd.length !== 4) return alert("請輸入 4 位數密碼");
-    const newId = Math.floor(1000 + Math.random() * 9000).toString();
-    currentRoomId = newId;
-    db.ref('rooms/' + newId).set({ password: pwd }).then(() => showView('nicknameView'));
+    if (pwd.length !== 4) return alert("請輸入 4 位密碼");
+    const id = Math.floor(1000 + Math.random() * 9000).toString();
+    currentRoomId = id;
+    db.ref('rooms/' + id).set({ password: pwd }).then(() => showView('nicknameView'));
 }
 
 function joinRoom() {
@@ -106,12 +105,15 @@ function togglePlatform(f, p) {
         const gridData = snap.val() || {};
         const target = gridData[`${f}_${p}`];
 
+        // 取消填色邏輯
         if (target && target.color === myColor) {
             db.ref(`rooms/${currentRoomId}/grid/${f}_${p}`).remove();
             return;
         }
-        if (target && target.color !== myColor) return; 
+        // 互斥：不能改別人的
+        if (target && target.color !== myColor) return;
 
+        // 互斥：每人每層限一格
         for (let key in gridData) {
             if (key.startsWith(`${f}_`) && gridData[key].color === myColor) {
                 db.ref(`rooms/${currentRoomId}/grid/${key}`).remove();
@@ -151,15 +153,9 @@ function clearAllPlatforms() {
     if (confirm("確定清空嗎？")) db.ref(`rooms/${currentRoomId}/grid`).remove();
 }
 
-// 分享連結功能
 function copyShareLink() {
-    // 取得當前網址並移除舊的參數，加上新房號
-    const baseUrl = window.location.origin + window.location.pathname;
-    const shareUrl = `${baseUrl}?room=${currentRoomId}`;
-    
-    navigator.clipboard.writeText(shareUrl).then(() => {
-        alert("分享連結已複製！發給隊友即可直接加入房間。");
-    }).catch(err => {
-        alert("複製失敗，請手動複製網址：" + shareUrl);
-    });
+    const url = window.location.origin + window.location.pathname + "?room=" + currentRoomId;
+    navigator.clipboard.writeText(url).then(() => {
+        alert("分享連結已複製！發給隊友即可一鍵加入。");
+    }).catch(() => alert("請手動複製網址：" + url));
 }
