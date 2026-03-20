@@ -6,7 +6,7 @@
 const firebaseConfig = {
   apiKey: "AIzaSyCpJmhpPRxgTSTpZi38DHCaV8ZaLhuKKTc",
   authDomain: "rjpq-tool-2ee82.firebaseapp.com",
-  databaseURL: "https://rjpq-tool-2ee82-default-rtdb.firebaseio.com/",
+  databaseURL: "https://rjpq-tool-2ee82-default-rtdb.firebaseio.com",
   projectId: "rjpq-tool-2ee82",
   storageBucket: "rjpq-tool-2ee82.firebasestorage.app",
   messagingSenderId: "349150642845",
