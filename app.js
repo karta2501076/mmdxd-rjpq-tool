@@ -17,7 +17,6 @@ let currentRoomId = null;
 let myNickname = "";
 let myColor = null;
 
-// 自動偵測網址分享參數
 window.onload = function() {
     const params = new URLSearchParams(window.location.search);
     const room = params.get('room');
@@ -40,7 +39,7 @@ function showView(viewId) {
 
 function createRoom() {
     const pwd = document.getElementById('createPwd').value;
-    if (pwd.length !== 4) return alert("請輸入 4 位密碼");
+    if (pwd.length !== 4) return alert("請輸入 4 位數密碼");
     const id = Math.floor(1000 + Math.random() * 9000).toString();
     currentRoomId = id;
     db.ref('rooms/' + id).set({ password: pwd }).then(() => showView('nicknameView'));
@@ -63,20 +62,72 @@ function setNickname() {
     myNickname = nick;
     initGrid();
     listenToRoom();
+    listenToColors(); // 新增顏色監聽
     showView('mainGameView');
 }
 
+// 核心功能：選擇顏色（含佔用邏輯）
 function selectColor(color) {
-    myColor = color;
-    document.querySelectorAll('.color-btn').forEach(btn => {
-        btn.classList.remove('selected');
-        if (btn.getAttribute('data-color') === color) btn.classList.add('selected');
+    if (myColor) return alert("你已經選過顏色了！請先點擊「重選」才能更換。");
+
+    const colorRef = db.ref(`rooms/${currentRoomId}/colors/${color.replace('#','')}`);
+    colorRef.once('value', snap => {
+        if (snap.exists()) {
+            alert(`這個顏色已經被 ${snap.val()} 選走囉！`);
+        } else {
+            colorRef.set(myNickname);
+            myColor = color;
+            updateColorUI();
+        }
     });
 }
 
+// 核心功能：重選顏色（釋放佔用）
 function resetMyColor() {
+    if (!myColor) return;
+    
+    // 1. 先清空自己在平台上填的所有顏色 (為了安全)
+    const gridRef = db.ref(`rooms/${currentRoomId}/grid`);
+    gridRef.once('value', snap => {
+        const data = snap.val();
+        if (data) {
+            Object.keys(data).forEach(key => {
+                if (data[key].color === myColor) {
+                    db.ref(`rooms/${currentRoomId}/grid/${key}`).remove();
+                }
+            });
+        }
+    });
+
+    // 2. 釋放顏色佔用
+    db.ref(`rooms/${currentRoomId}/colors/${myColor.replace('#','')}`).remove();
     myColor = null;
-    document.querySelectorAll('.color-btn').forEach(btn => btn.classList.remove('selected'));
+    updateColorUI();
+}
+
+// 更新顏色選單的視覺狀態
+function updateColorUI() {
+    document.querySelectorAll('.color-btn').forEach(btn => {
+        btn.classList.remove('selected');
+        const btnColor = btn.getAttribute('data-color');
+        if (myColor && btnColor === myColor) btn.classList.add('selected');
+    });
+}
+
+// 監聽房間內哪些顏色被佔用了
+function listenToColors() {
+    db.ref(`rooms/${currentRoomId}/colors`).on('value', snap => {
+        const takenColors = snap.val() || {};
+        document.querySelectorAll('.color-btn').forEach(btn => {
+            const btnColorKey = btn.getAttribute('data-color').replace('#','');
+            // 如果該顏色被佔用，且不是自己佔用的，就變灰色
+            if (takenColors[btnColorKey] && myColor !== btn.getAttribute('data-color')) {
+                btn.classList.add('taken');
+            } else {
+                btn.classList.remove('taken');
+            }
+        });
+    });
 }
 
 function initGrid() {
@@ -105,15 +156,12 @@ function togglePlatform(f, p) {
         const gridData = snap.val() || {};
         const target = gridData[`${f}_${p}`];
 
-        // 取消填色邏輯
         if (target && target.color === myColor) {
             db.ref(`rooms/${currentRoomId}/grid/${f}_${p}`).remove();
             return;
         }
-        // 互斥：不能改別人的
-        if (target && target.color !== myColor) return;
+        if (target && target.color !== myColor) return; 
 
-        // 互斥：每人每層限一格
         for (let key in gridData) {
             if (key.startsWith(`${f}_`) && gridData[key].color === myColor) {
                 db.ref(`rooms/${currentRoomId}/grid/${key}`).remove();
@@ -150,7 +198,9 @@ function listenToRoom() {
 }
 
 function clearAllPlatforms() {
-    if (confirm("確定清空嗎？")) db.ref(`rooms/${currentRoomId}/grid`).remove();
+    if (confirm("確定清空嗎？這會清除所有人的進度！")) {
+        db.ref(`rooms/${currentRoomId}/grid`).remove();
+    }
 }
 
 function copyShareLink() {
