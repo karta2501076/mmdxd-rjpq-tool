@@ -5,40 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>羅茱助手：真・多人同步</title>
     <style>
-        /* 基礎樣式與放大設定 */
         body { font-family: 'Segoe UI', sans-serif; background: #1a1a21; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 0; overflow: hidden; font-size: 1.2rem; }
         .container { background: #2d2d37; padding: 20px; border-radius: 18px; width: 420px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
         h2 { margin: 0 0 15px 0; color: #fff; font-size: 1.6rem; }
         
-        /* 各視圖容器 */
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
         #mainGameView { width: 100%; display: flex; flex-direction: column; align-items: center; }
 
-        /* 輸入框與按鈕 */
         input { width: 90%; padding: 10px; border-radius: 10px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.2rem; }
         button { border-radius: 10px; border: none; cursor: pointer; font-weight: bold; font-size: 1.2rem; transition: 0.2s; }
         .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; }
-        .secondary-btn { background: #444; color: white; padding: 6px 12px; font-size: 1rem; }
+        .secondary-btn { background: #444; color: white; padding: 6px 12px; font-size: 0.9rem; }
 
-        /* 遊戲資訊列 */
-        .header-info { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 1.1rem; }
+        .header-info { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 1rem; }
         .room-code span { color: #f1c40f; font-weight: bold; }
 
-        /* 顏色選單 */
         .color-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
         .color-btn { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; }
         .color-btn.selected { border-color: white; transform: scale(1.1); }
 
-        /* 表格與平台按鈕 */
         table { width: 100%; border-spacing: 4px; table-layout: fixed; }
         .floor-label { width: 45px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #888; }
         .p-btn { width: 100%; height: 48px; background: #3c3c46; border: none; border-radius: 10px; color: #ffffff !important; font-weight: bold; cursor: pointer; font-size: 1.4rem; padding: 0; position: relative; overflow: hidden; }
         
-        /* 暱稱標籤 (右下角黑底白字) */
         .user-tag { position: absolute; bottom: 2px; right: 2px; background: rgba(0, 0, 0, 0.75); color: white; font-size: 0.65rem; padding: 1px 4px; border-radius: 3px; line-height: 1; pointer-events: none; font-weight: normal; }
 
         .p-btn.disabled { cursor: not-allowed; filter: brightness(0.7); }
         .hidden { display: none !important; }
+        
+        /* 分享連結文字顯示 */
+        .share-url-hint { font-size: 0.8rem; color: #888; margin-top: 5px; word-break: break-all; text-align: center; width: 90%; }
     </style>
 </head>
 <body>
@@ -65,15 +61,19 @@
     </div>
 
     <div id="nicknameView" class="hidden">
-        <p>房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
-        <input type="text" id="nicknameInput" placeholder="輸入暱稱" maxlength="6">
+        <p>即將進入房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
+        <input type="text" id="nicknameInput" placeholder="輸入你的暱稱" maxlength="6">
         <button class="primary-btn" onclick="setNickname()">開始同步</button>
+        <p class="share-url-hint">你可以將此網址發給隊友，他們點開即可直接輸入暱稱加入。</p>
     </div>
 
     <div id="mainGameView" class="hidden">
         <div class="header-info">
             <div class="room-code">房間：<span id="activeRoomId">------</span></div>
-            <button class="secondary-btn" onclick="clearAllPlatforms()">清空平台</button>
+            <div style="display:flex; gap:5px;">
+                <button class="secondary-btn" onclick="copyShareLink()">分享連結</button>
+                <button class="secondary-btn" onclick="clearAllPlatforms()">清空</button>
+            </div>
         </div>
 
         <div class="color-bar">
@@ -81,7 +81,7 @@
             <div class="color-btn" style="background:#FFC78E" data-color="#FFC78E" onclick="selectColor('#FFC78E')"></div>
             <div class="color-btn" style="background:#66B3FF" data-color="#66B3FF" onclick="selectColor('#66B3FF')"></div>
             <div class="color-btn" style="background:#FF79BC" data-color="#FF79BC" onclick="selectColor('#FF79BC')"></div>
-            <button onclick="resetMyColor()" style="background:none; border:1px solid #444; color:#888; border-radius:5px; font-size:0.8rem; padding:5px;">重選</button>
+            <button onclick="resetMyColor()" style="background:none; border:1px solid #444; color:#888; border-radius:5px; font-size:0.7rem; padding:5px;">重選</button>
         </div>
 
         <table>
