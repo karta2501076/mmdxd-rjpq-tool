@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>超讚RJPQ小工具</title>
     <style>
-        /* 基礎樣式與放大設定 */
         body { font-family: 'Segoe UI', sans-serif; background: #1a1a21; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 0; overflow: hidden; font-size: 1.2rem; }
         .container { background: #2d2d37; padding: 20px; border-radius: 18px; width: 420px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
         h2 { margin: 0 0 15px 0; color: #fff; font-size: 1.6rem; }
         
-        /* 視圖切換 */
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
         #mainGameView { width: 100%; display: flex; flex-direction: column; align-items: center; }
 
@@ -19,22 +17,21 @@
         .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; }
         .secondary-btn { background: #444; color: white; padding: 6px 12px; font-size: 0.9rem; }
 
-        /* 頂部資訊列：房號與功能鈕 */
         .header-info { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 1.1rem; }
         .room-code span { color: #f1c40f; font-weight: bold; }
         .action-group { display: flex; gap: 5px; }
 
-        /* 顏色選擇列 */
+        /* 顏色選擇列優化 */
         .color-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
-        .color-btn { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; }
+        .color-btn { width: 45px; height: 45px; border-radius: 12px; cursor: pointer; border: 3px solid transparent; position: relative; }
         .color-btn.selected { border-color: white; transform: scale(1.1); }
+        .color-btn.taken { cursor: not-allowed; opacity: 0.3; filter: grayscale(1); }
+        .color-btn.taken::after { content: "✖"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 1.2rem; }
 
-        /* 平台表格 */
         table { width: 100%; border-spacing: 4px; table-layout: fixed; }
         .floor-label { width: 45px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #888; }
         .p-btn { width: 100%; height: 48px; background: #3c3c46; border: none; border-radius: 10px; color: #ffffff !important; font-weight: bold; cursor: pointer; font-size: 1.4rem; padding: 0; position: relative; overflow: hidden; }
         
-        /* 右下角標籤：黑底白字 */
         .user-tag { position: absolute; bottom: 2px; right: 2px; background: rgba(0, 0, 0, 0.75); color: white; font-size: 0.65rem; padding: 1px 4px; border-radius: 3px; line-height: 1; pointer-events: none; font-weight: normal; }
 
         .p-btn.disabled { cursor: not-allowed; filter: brightness(0.7); }
@@ -69,7 +66,6 @@
         <p>準備加入房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入你的暱稱" maxlength="6">
         <button class="primary-btn" onclick="setNickname()">開始同步</button>
-        <p class="share-hint">使用分享連結進入可跳過密碼步驟</p>
     </div>
 
     <div id="mainGameView" class="hidden">
@@ -82,10 +78,10 @@
         </div>
 
         <div class="color-bar">
-            <div class="color-btn" style="background:#FF7575" data-color="#FF7575" onclick="selectColor('#FF7575')"></div>
-            <div class="color-btn" style="background:#FFC78E" data-color="#FFC78E" onclick="selectColor('#FFC78E')"></div>
-            <div class="color-btn" style="background:#66B3FF" data-color="#66B3FF" onclick="selectColor('#66B3FF')"></div>
-            <div class="color-btn" style="background:#FF79BC" data-color="#FF79BC" onclick="selectColor('#FF79BC')"></div>
+            <div class="color-btn" id="color-#FF7575" style="background:#FF7575" data-color="#FF7575" onclick="selectColor('#FF7575')"></div>
+            <div class="color-btn" id="color-#FFC78E" style="background:#FFC78E" data-color="#FFC78E" onclick="selectColor('#FFC78E')"></div>
+            <div class="color-btn" id="color-#66B3FF" style="background:#66B3FF" data-color="#66B3FF" onclick="selectColor('#66B3FF')"></div>
+            <div class="color-btn" id="color-#FF79BC" style="background:#FF79BC" data-color="#FF79BC" onclick="selectColor('#FF79BC')"></div>
             <button onclick="resetMyColor()" style="background:none; border:1px solid #444; color:#888; border-radius:5px; font-size:0.75rem; padding:4px;">重選</button>
         </div>
 
