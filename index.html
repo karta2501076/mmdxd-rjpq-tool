@@ -6,7 +6,7 @@
     <title>超讚RJPQ小工具</title>
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #1a1a21; color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; padding: 0; overflow: hidden; font-size: 1.2rem; }
-        .container { background: #2d2d37; padding: 20px; border-radius: 18px; width: 420px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
+        .container { background: #2d2d37; padding: 20px; border-radius: 18px; width: 440px; box-shadow: 0 4px 20px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
         h2 { margin: 0 0 15px 0; color: #fff; font-size: 1.6rem; }
         
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
@@ -16,16 +16,19 @@
         button { border-radius: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
         
         .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; font-size: 1.2rem; }
-        .secondary-btn { background: #444; color: white; padding: 6px 12px; font-size: 0.9rem; }
+        .secondary-btn { background: #444; color: white; padding: 6px 10px; font-size: 0.85rem; }
         
-        /* 訂閱按鈕樣式 */
-        .sub-btn { background: #ff0000; color: white; padding: 6px 15px; font-size: 0.9rem; text-decoration: none; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; }
-        .sub-btn:hover { background: #cc0000; transform: scale(1.05); }
+        /* 推廣按鈕樣式 */
+        .promo-btn { color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; }
+        .yt-btn { background: #ff0000; }
+        .yt-btn:hover { background: #cc0000; transform: scale(1.05); }
+        .tw-btn { background: #9146ff; } /* Twitch 紫色 */
+        .tw-btn:hover { background: #772ce8; transform: scale(1.05); }
 
-        .header-info { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .header-info { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
         .room-code span { color: #f1c40f; font-weight: bold; }
-        .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 4px 10px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; margin: 0 10px; line-height: 1.2; }
+        .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 12px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; line-height: 1.3; }
         .action-group { display: flex; gap: 5px; }
 
         .color-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 12px; border-radius: 12px; margin-bottom: 10px; }
@@ -74,14 +77,15 @@
         <div class="header-info">
             <div class="info-row">
                 <div class="room-code">房間：<span id="activeRoomId">------</span></div>
-                <a href="https://www.youtube.com/@yulihong22" target="_blank" class="sub-btn">訂閱咪咪蛋</a>
+                <a href="https://www.youtube.com/@yulihong22" target="_blank" class="promo-btn yt-btn">咪咪蛋YT頻道</a>
+                <a href="https://www.twitch.tv/yulihong22" target="_blank" class="promo-btn tw-btn">咪咪蛋Twitch頻道</a>
+            </div>
+            <div class="info-row">
+                <div class="credit-info">公會: MMDxD | 製作: 咖塔</div>
                 <div class="action-group">
                     <button class="secondary-btn" style="background:#28a745;" onclick="copyShareLink()">分享</button>
                     <button class="secondary-btn" onclick="clearAllPlatforms()">清空</button>
                 </div>
-            </div>
-            <div class="info-row" style="justify-content: center;">
-                <div class="credit-info">公會: MMDxD | 製作: 咖塔</div>
             </div>
         </div>
 
