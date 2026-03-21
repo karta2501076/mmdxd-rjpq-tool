@@ -5,64 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>超讚RJPQ小工具</title>
     <style>
-        /* 基礎樣式：微調字體大小與背景 */
-        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: #1a1a21; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; box-sizing: border-box; font-size: 1.1rem; }
-        .container { background: #2d2d37; padding: 25px; border-radius: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.7); display: flex; flex-direction: column; align-items: center; }
-        h2 { margin: 0; color: #fff; font-size: 1.8rem; letter-spacing: 1px; }
-        .hint-text { font-size: 0.85rem; color: #888; margin-bottom: 15px; }
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: #1a1a21; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; font-size: 1rem; }
+        .container { background: #2d2d37; padding: 20px; border-radius: 18px; box-shadow: 0 6px 25px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
+        h2 { margin: 0; color: #fff; font-size: 1.5rem; }
+        .hint-text { font-size: 0.75rem; color: #888; margin-bottom: 12px; }
         
-        #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 400px; }
+        #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 380px; }
         
-        /* 核心：主畫面左右排版，增加間距 */
-        #mainGameView { display: flex; flex-direction: row; gap: 20px; align-items: flex-start; }
+        /* 左右排版：適中寬度與間距 */
+        #mainGameView { display: flex; flex-direction: row; gap: 15px; align-items: flex-start; }
 
-        /* 左側主要控制區：適度放寬至 460px */
-        .game-main-content { display: flex; flex-direction: column; align-items: center; width: 460px; }
+        /* 左側主要控制區：430px 是平衡點 */
+        .game-main-content { display: flex; flex-direction: column; align-items: center; width: 430px; }
 
-        input { width: 90%; padding: 12px; border-radius: 10px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.2rem; }
-        button { border-radius: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        input { width: 90%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.1rem; }
+        button { border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
         
-        .primary-btn { background: #007bff; color: white; width: 100%; padding: 14px; font-size: 1.3rem; }
-        .secondary-btn { background: #444; color: white; padding: 8px 12px; font-size: 0.9rem; }
-        .exit-btn { background: #6c757d; color: white; padding: 8px 12px; font-size: 0.9rem; }
+        .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; font-size: 1.2rem; }
+        .secondary-btn { background: #444; color: white; padding: 6px 10px; font-size: 0.85rem; }
+        .exit-btn { background: #6c757d; color: white; padding: 6px 10px; font-size: 0.85rem; }
         
-        /* 推廣按鈕：高度與比例增加 */
-        .promo-btn { color: white; padding: 10px 0; font-size: 1rem; text-decoration: none; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; min-width: 135px; }
+        .promo-btn { color: white; padding: 8px 0; font-size: 0.9rem; text-decoration: none; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; min-width: 120px; }
         .yt-btn { background: #ff0000; }
         .tw-btn { background: #9146ff; } 
 
-        .header-info { width: 100%; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
-        .room-code { font-size: 1.2rem; }
-        .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.4rem; }
-        .credit-info { font-size: 0.95rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; }
-        .action-group { display: flex; gap: 6px; }
+        .header-info { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
+        .room-code { font-size: 1.1rem; }
+        .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.2rem; }
+        .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 7px; border: 1px solid #444; text-align: center; flex-grow: 1; }
+        .action-group { display: flex; gap: 5px; }
 
-        /* 右側在線名單：寬度調整為 180px */
+        /* 右側在線名單：縮減至 150px */
         .user-list-sidebar { 
-            width: 180px; 
-            background: rgba(0,0,0,0.4); 
-            padding: 15px; 
+            width: 150px; 
+            background: rgba(0,0,0,0.35); 
+            padding: 12px; 
             border-radius: 12px; 
-            border: 1px solid #555; 
+            border: 1px solid #444; 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
         }
-        .user-list-title { font-size: 1rem; font-weight: bold; color: #bbb; margin-bottom: 12px; border-bottom: 2px solid #555; padding-bottom: 6px; text-align: center; }
-        #userList { display: flex; flex-direction: column; gap: 10px; }
-        .user-badge { font-size: 0.95rem; padding: 8px; border-radius: 8px; color: #fff; font-weight: bold; text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .user-list-title { font-size: 0.9rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
+        #userList { display: flex; flex-direction: column; gap: 8px; }
+        .user-badge { font-size: 0.85rem; padding: 6px; border-radius: 6px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; }
 
-        /* 選色區：按鈕變大 */
-        .picker-bar { width: 100%; display: flex; gap: 12px; justify-content: center; align-items: center; background: #1a1a21; padding: 12px; border-radius: 12px; margin-bottom: 12px; box-sizing: border-box; }
-        #colorPicker { width: 45px; height: 45px; border: none; background: none; cursor: pointer; padding: 0; }
-        .status-tag { font-size: 0.9rem; padding: 5px 10px; border-radius: 6px; background: #444; }
+        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; }
+        #colorPicker { width: 40px; height: 40px; border: none; background: none; cursor: pointer; padding: 0; }
+        .status-tag { font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; background: #444; }
 
-        /* 表格格子：高度增加，數字加大 */
-        table { width: 100%; border-spacing: 4px; table-layout: fixed; }
-        .floor-label { width: 45px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #888; }
-        .p-btn { width: 100%; height: 48px; background: #3c3c46; border: none; border-radius: 10px; color: #fff !important; font-weight: bold; cursor: pointer; font-size: 1.5rem; position: relative; overflow: hidden; }
-        .user-tag { position: absolute; bottom: 2px; right: 2px; background: rgba(0, 0, 0, 0.8); color: white; font-size: 0.65rem; padding: 1px 4px; border-radius: 3px; pointer-events: none; }
+        /* 格子高度 42px，數字 1.35rem */
+        table { width: 100%; border-spacing: 3px; table-layout: fixed; }
+        .floor-label { width: 40px; text-align: center; font-weight: bold; font-size: 1rem; color: #888; }
+        .p-btn { width: 100%; height: 42px; background: #3c3c46; border: none; border-radius: 9px; color: #fff !important; font-weight: bold; cursor: pointer; font-size: 1.35rem; position: relative; overflow: hidden; }
+        .user-tag { position: absolute; bottom: 1px; right: 2px; background: rgba(0, 0, 0, 0.75); color: white; font-size: 0.6rem; padding: 1px 3px; border-radius: 2px; pointer-events: none; }
         
         .hidden { display: none !important; }
     </style>
@@ -105,7 +102,7 @@
                     <a href="https://www.twitch.tv/yulihong22" target="_blank" class="promo-btn tw-btn">咪咪蛋 Twitch</a>
                 </div>
                 <div class="info-row">
-                    <div class="credit-info">公會: MMDxD | 製作: 咖塔</div>
+                    <div class="credit-info">MMDxD | 咖塔</div>
                     <div class="action-group">
                         <button class="secondary-btn" style="background:#28a745;" onclick="copyShareLink()">分享</button>
                         <button class="secondary-btn" onclick="clearAllPlatforms()">清空</button>
@@ -117,7 +114,7 @@
             <div class="picker-bar">
                 <span>選色：</span>
                 <input type="color" id="colorPicker" value="#00EC00">
-                <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff;" onclick="pickCustomColor()">確認顏色</button>
+                <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff;" onclick="pickCustomColor()">確認</button>
                 <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
                 <div id="myColorStatus" class="hidden status-tag">已鎖定</div>
             </div>
@@ -128,7 +125,7 @@
         </div>
 
         <div class="user-list-sidebar">
-            <div class="user-list-title">目前在線隊員</div>
+            <div class="user-list-title">在線隊員</div>
             <div id="userList"></div>
         </div>
     </div>
@@ -136,6 +133,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<script src="app.js?v=20260321_upscale"></script>
+<script src="app.js?v=20260321_balanced"></script>
 </body>
 </html>
