@@ -1,12 +1,13 @@
 // Firebase 配置 (請確保與你的 Firebase Console 資訊一致)
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  databaseURL: "https://rjpq-tool-2ee82-default-rtdb.firebaseio.com/",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyCpJmhpPRxgTSTpZi38DHCaV8ZaLhuKKTc",
+  authDomain: "rjpq-tool-2ee82.firebaseapp.com",
+  databaseURL: "https://rjpq-tool-2ee82-default-rtdb.firebaseio.com",
+  projectId: "rjpq-tool-2ee82",
+  storageBucket: "rjpq-tool-2ee82.firebasestorage.app",
+  messagingSenderId: "349150642845",
+  appId: "1:349150642845:web:14fe4a135278f82cc40a74",
+  measurementId: "G-9FP8PMRQ5Q"
 };
 
 // 初始化 Firebase
