@@ -72,7 +72,7 @@
 <body>
 <div class="container">
     <h2>超讚RJPQ小工具</h2>
-    <div class="hint-text">快捷鍵: 1~4 填色，0 取消上一層<br>(手機用戶點擊位置或雙指縮放)</div>
+    <div class="hint-text">鍵盤快捷鍵: 1~4 填色，0 取消上一層<br>(現在手機也能用囉)</div>
 
     <div id="startView">
         <button class="primary-btn" onclick="showView('createView')">創建房間</button>
@@ -92,7 +92,7 @@
     <div id="nicknameView" class="hidden">
         <p>房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入暱稱" maxlength="6">
-        <button class="primary-btn" onclick="setNickname()">開始同步</button>
+        <button class="primary-btn" onclick="setNickname()">加入</button>
         <button class="secondary-btn" onclick="leaveRoom()">取消</button>
     </div>
 
@@ -101,8 +101,8 @@
             <div class="header-info">
                 <div class="info-row">
                     <div class="room-code">房號：<span id="activeRoomId">------</span></div>
-                    <a href="https://www.youtube.com/@yulihong22" target="_blank" class="promo-btn yt-btn">咪咪蛋的 YT</a>
-                    <a href="https://www.twitch.tv/yulihong22" target="_blank" class="promo-btn tw-btn">咪咪蛋 Twitch</a>
+                    <a href="https://www.youtube.com/@yulihong22" target="_blank" class="promo-btn yt-btn">咪咪蛋的YT</a>
+                    <a href="https://www.twitch.tv/yulihong22" target="_blank" class="promo-btn tw-btn">咪咪蛋的Twitch</a>
                 </div>
                 <div class="info-row">
                     <div class="credit-info">公會: MMDxD | 製作: 咖塔</div>
@@ -114,7 +114,7 @@
                 </div>
             </div>
             <div class="picker-bar">
-                <span>選色：</span>
+                <span>選你喜歡的顏色：</span>
                 <input type="color" id="colorPicker" value="#00EC00">
                 <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff;" onclick="pickCustomColor()">確認</button>
                 <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
