@@ -14,7 +14,6 @@ const db = firebase.database();
 
 let currentRoomId = null, myNickname = "", myColor = "", isLocked = false;
 
-// 初始化表格
 const gridBody = document.getElementById('gridBody');
 for (let f = 10; f >= 1; f--) {
     let row = document.createElement('tr');
@@ -23,7 +22,6 @@ for (let f = 10; f >= 1; f--) {
     gridBody.appendChild(row);
 }
 
-// 啟動檢測：是否有網址參數 room
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const roomIdFromUrl = urlParams.get('room');
@@ -95,53 +93,83 @@ function listenToRoom() {
     });
 }
 
+// 選色唯一性機制
 function pickCustomColor() {
-    myColor = document.getElementById('colorPicker').value; isLocked = true;
-    document.getElementById('myColorStatus').classList.remove('hidden');
-    document.getElementById('confirmColorBtn').classList.add('hidden');
-    document.getElementById('resetColorBtn').classList.remove('hidden');
-    if (currentRoomId) db.ref(`rooms/${currentRoomId}/users/${myNickname}`).update({ color: myColor });
+    const selectedColor = document.getElementById('colorPicker').value;
+    db.ref(`rooms/${currentRoomId}/users`).once('value', snap => {
+        const users = snap.val() || {};
+        const isColorUsed = Object.keys(users).some(u => u !== myNickname && users[u].color === selectedColor);
+        if (isColorUsed) {
+            alert("此顏色已被其他隊友選用，請更換顏色！");
+        } else {
+            myColor = selectedColor;
+            isLocked = true;
+            document.getElementById('myColorStatus').classList.remove('hidden');
+            document.getElementById('confirmColorBtn').classList.add('hidden');
+            document.getElementById('resetColorBtn').classList.remove('hidden');
+            db.ref(`rooms/${currentRoomId}/users/${myNickname}`).update({ color: myColor });
+        }
+    });
 }
 
 function resetMyColor() {
-    isLocked = false; document.getElementById('myColorStatus').classList.add('hidden');
+    isLocked = false; 
+    document.getElementById('myColorStatus').classList.add('hidden');
     document.getElementById('confirmColorBtn').classList.remove('hidden');
     document.getElementById('resetColorBtn').classList.add('hidden');
 }
 
+// 手動填色防呆：不能蓋別人的顏色，且同一層不能填兩個位置
 function togglePlatform(f, p) {
     if (!isLocked) return alert("請先選定顏色並點擊確認");
     db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
         const gridData = snap.val() || {};
         const targetKey = `${f}_${p}`;
-        if (gridData[targetKey] && gridData[targetKey].user === myNickname) {
-            db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).remove();
+        if (gridData[targetKey]) {
+            if (gridData[targetKey].user === myNickname) db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).remove();
             return;
         }
         for (let i = 1; i <= 4; i++) {
-            const checkKey = `${f}_${i}`;
-            if (gridData[checkKey] && gridData[checkKey].color === myColor) return;
+            if (gridData[`${f}_${i}`] && gridData[`${f}_${i}`].color === myColor) return;
         }
         db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).set({ user: myNickname, color: myColor });
     });
 }
 
+// 核心修正：快捷鍵邏輯
 function autoFillNextFloor(p) {
     if (!isLocked) return;
     db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
         const gridData = snap.val() || {};
+        // 1. 先找出「我」目前還沒填色的最低樓層是哪一層
+        let nextFloorForMe = 1;
         for (let f = 1; f <= 10; f++) {
-            let colorExistsInFloor = false;
+            let myColorExistsInThisFloor = false;
             for (let i = 1; i <= 4; i++) {
                 if (gridData[`${f}_${i}`] && gridData[`${f}_${i}`].color === myColor) {
-                    colorExistsInFloor = true; break;
+                    myColorExistsInThisFloor = true;
+                    break;
                 }
             }
-            if (!gridData[`${f}_${p}`] && !colorExistsInFloor) {
-                db.ref(`rooms/${currentRoomId}/grid/${f}_${p}`).set({ user: myNickname, color: myColor });
+            if (!myColorExistsInThisFloor) {
+                nextFloorForMe = f;
                 break;
             }
+            if (f === 10) return; // 10層都填滿了
         }
+
+        // 2. 確定了我要填 nextFloorForMe 這一層的平台 p
+        const targetKey = `${nextFloorForMe}_${p}`;
+        
+        // 3. 【防呆關鍵】：檢查該層的平台 p 是不是已經有人填了？
+        if (gridData[targetKey]) {
+            // 如果這格已經有任何人（不論是誰）填了色，就直接「沒反應」
+            console.log(`樓層 ${nextFloorForMe} 平台 ${p} 已被佔用，不進行動作`);
+            return; 
+        }
+
+        // 4. 如果沒人填，才正式執行填色
+        db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).set({ user: myNickname, color: myColor });
     });
 }
 
@@ -152,7 +180,8 @@ function undoLastFill() {
         for (let f = 10; f >= 1; f--) {
             for (let p = 1; p <= 4; p++) {
                 if (data[`${f}_${p}`] && data[`${f}_${p}`].user === myNickname) {
-                    db.ref(`rooms/${currentRoomId}/grid/${f}_${p}`).remove(); return;
+                    db.ref(`rooms/${currentRoomId}/grid/${f}_${p}`).remove(); 
+                    return;
                 }
             }
         }
