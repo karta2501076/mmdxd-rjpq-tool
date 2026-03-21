@@ -5,24 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>超讚RJPQ小工具</title>
     <style>
-        /* 1.05倍調整：基礎字體約 16.8px */
         body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: #1a1a21; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; font-size: 1.05rem; overflow: hidden; }
         .container { background: #2d2d37; padding: 18px 22px; border-radius: 16px; box-shadow: 0 6px 25px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
-        
         h2 { margin: 0; color: #fff; font-size: 1.58rem; } 
         .hint-text { font-size: 0.78rem; color: #aaa; margin-bottom: 10px; font-weight: bold; }
         
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 380px; }
-        
-        /* 左右排版 */
         #mainGameView { display: flex; flex-direction: row; gap: 15px; align-items: flex-start; }
-
-        /* 左側主要控制區：約 445px */
         .game-main-content { display: flex; flex-direction: column; align-items: center; width: 445px; }
 
         input { width: 90%; padding: 10px; border-radius: 9px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.15rem; }
         button { border-radius: 9px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
-        
         .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; font-size: 1.25rem; }
         .secondary-btn { background: #444; color: white; padding: 6px 10px; font-size: 0.9rem; }
         .exit-btn { background: #6c757d; color: white; padding: 6px 10px; font-size: 0.9rem; }
@@ -33,31 +26,18 @@
 
         .header-info { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
-        .room-code { font-size: 1.1rem; }
         .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.25rem; }
         .credit-info { font-size: 0.88rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; }
-        .action-group { display: flex; gap: 5px; }
 
-        /* 右側在線名單：約 155px */
-        .user-list-sidebar { 
-            width: 155px; 
-            background: rgba(0,0,0,0.35); 
-            padding: 12px; 
-            border-radius: 12px; 
-            border: 1px solid #444; 
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-        }
+        .user-list-sidebar { width: 155px; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px; border: 1px solid #444; box-sizing: border-box; display: flex; flex-direction: column; }
         .user-list-title { font-size: 0.9rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
         #userList { display: flex; flex-direction: column; gap: 7px; }
         .user-badge { font-size: 0.9rem; padding: 6px; border-radius: 7px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 11px; margin-bottom: 10px; box-sizing: border-box; }
+        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 11px; margin-bottom: 10px; }
         #colorPicker { width: 42px; height: 42px; border: none; background: none; cursor: pointer; padding: 0; }
         .status-tag { font-size: 0.9rem; padding: 4px 9px; border-radius: 6px; background: #444; }
 
-        /* 表格高度調整 */
         table { width: 100%; border-spacing: 2.5px; table-layout: fixed; }
         .floor-label { width: 38px; text-align: center; font-weight: bold; font-size: 1.05rem; color: #888; }
         .p-btn { width: 100%; height: 41px; background: #3c3c46; border: none; border-radius: 8px; color: #fff !important; font-weight: bold; cursor: pointer; font-size: 1.4rem; position: relative; overflow: hidden; }
@@ -67,7 +47,6 @@
     </style>
 </head>
 <body>
-
 <div class="container">
     <h2>超讚RJPQ小工具</h2>
     <div class="hint-text">快捷鍵: 由下往上快速填色按 1~4 若想取消上一層填色按0</div>
@@ -76,20 +55,17 @@
         <button class="primary-btn" onclick="showView('createView')">創建房間</button>
         <button class="primary-btn" onclick="showView('joinView')">加入房間</button>
     </div>
-
     <div id="createView" class="hidden">
         <input type="password" id="createPwd" placeholder="設定 4 碼密碼" maxlength="4">
         <button class="primary-btn" onclick="createRoom()">確認創建</button>
         <button class="secondary-btn" onclick="showView('startView')">返回</button>
     </div>
-
     <div id="joinView" class="hidden">
         <input type="text" id="joinId" placeholder="房間號碼">
         <input type="password" id="joinPwd" placeholder="密碼">
         <button class="primary-btn" onclick="joinRoom()">加入</button>
         <button class="secondary-btn" onclick="showView('startView')">返回</button>
     </div>
-
     <div id="nicknameView" class="hidden">
         <p>房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入暱稱" maxlength="6">
@@ -114,7 +90,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="picker-bar">
                 <span>選色：</span>
                 <input type="color" id="colorPicker" value="#00EC00">
@@ -122,19 +97,14 @@
                 <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
                 <div id="myColorStatus" class="hidden status-tag">已鎖定</div>
             </div>
-
-            <table>
-                <tbody id="gridBody"></tbody>
-            </table>
+            <table><tbody id="gridBody"></tbody></table>
         </div>
-
         <div class="user-list-sidebar">
             <div class="user-list-title">在線隊員</div>
             <div id="userList"></div>
         </div>
     </div>
 </div>
-
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="app.js"></script>
