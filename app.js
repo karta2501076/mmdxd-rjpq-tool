@@ -14,7 +14,6 @@ const db = firebase.database();
 
 let currentRoomId = null, myNickname = "", myColor = "", isLocked = false;
 
-// 初始化表格 UI
 const gridBody = document.getElementById('gridBody');
 for (let f = 10; f >= 1; f--) {
     let row = document.createElement('tr');
@@ -23,7 +22,6 @@ for (let f = 10; f >= 1; f--) {
     gridBody.appendChild(row);
 }
 
-// 處理網址房號參數
 window.onload = () => {
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('room')) {
@@ -69,6 +67,9 @@ function setNickname() {
 
 function listenToRoom() {
     const roomRef = db.ref(`rooms/${currentRoomId}`);
+    const usersRef = roomRef.child('users');
+    const myUserRef = usersRef.child(myNickname);
+
     // 網格填色同步
     roomRef.child('grid').on('value', snap => {
         const data = snap.val() || {};
@@ -81,17 +82,36 @@ function listenToRoom() {
             if (btn) { btn.style.backgroundColor = data[key].color; btn.innerHTML = `${p}<div class="user-tag">${data[key].user}</div>`; }
         });
     });
-    // 在線人數監聽與無人房間刪除
-    const myRef = roomRef.child(`users/${myNickname}`);
-    myRef.set({ color: myColor || "#555" });
-    myRef.onDisconnect().remove();
 
-    roomRef.child('users').on('value', snap => {
+    // 核心：斷線自動回收邏輯
+    myUserRef.set({ color: myColor || "#555" });
+
+    usersRef.on('value', snap => {
         const users = snap.val();
-        const list = document.getElementById('userList'); list.innerHTML = "";
-        if (!users) { roomRef.remove(); return; }
-        Object.keys(users).forEach(u => {
-            const b = document.createElement('div'); b.className = 'user-badge'; b.style.backgroundColor = users[u].color; b.innerText = u; list.appendChild(b);
+        const list = document.getElementById('userList'); 
+        list.innerHTML = "";
+        
+        if (!users) {
+            roomRef.remove();
+            return;
+        }
+
+        const userNames = Object.keys(users);
+        
+        // 判定是否為最後一人，動態設定斷線行為
+        if (userNames.length === 1 && userNames[0] === myNickname) {
+            roomRef.onDisconnect().remove(); 
+        } else {
+            roomRef.onDisconnect().cancel();
+            myUserRef.onDisconnect().remove();
+        }
+
+        userNames.forEach(u => {
+            const b = document.createElement('div'); 
+            b.className = 'user-badge'; 
+            b.style.backgroundColor = users[u].color; 
+            b.innerText = u; 
+            list.appendChild(b);
         });
     });
 }
