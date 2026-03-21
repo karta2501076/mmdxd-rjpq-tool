@@ -14,6 +14,7 @@ const db = firebase.database();
 
 let currentRoomId = null, myNickname = "", myColor = "", isLocked = false;
 
+// 初始化表格
 const gridBody = document.getElementById('gridBody');
 for (let f = 10; f >= 1; f--) {
     let row = document.createElement('tr');
@@ -22,8 +23,22 @@ for (let f = 10; f >= 1; f--) {
     gridBody.appendChild(row);
 }
 
+// 啟動檢測：是否有網址參數 room
+window.onload = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomIdFromUrl = urlParams.get('room');
+    if (roomIdFromUrl) {
+        currentRoomId = roomIdFromUrl;
+        document.getElementById('roomIdDisplay').innerText = currentRoomId;
+        showView('nicknameView');
+    }
+};
+
 function showView(viewId) {
-    ['startView', 'createView', 'joinView', 'nicknameView', 'mainGameView'].forEach(id => document.getElementById(id).classList.add('hidden'));
+    ['startView', 'createView', 'joinView', 'nicknameView', 'mainGameView'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+    });
     document.getElementById(viewId).classList.remove('hidden');
 }
 
@@ -48,16 +63,26 @@ function joinRoom() {
 function setNickname() {
     const nick = document.getElementById('nicknameInput').value.trim();
     if (!nick) return alert("請輸入暱稱");
-    myNickname = nick; document.getElementById('activeRoomId').innerText = currentRoomId; showView('mainGameView'); listenToRoom();
+    myNickname = nick; 
+    document.getElementById('activeRoomId').innerText = currentRoomId; 
+    showView('mainGameView'); 
+    listenToRoom();
 }
 
 function listenToRoom() {
     db.ref(`rooms/${currentRoomId}/grid`).on('value', snap => {
         const data = snap.val() || {};
-        document.querySelectorAll('.p-btn').forEach(btn => { btn.style.backgroundColor = ""; const tag = btn.querySelector('.user-tag'); if (tag) tag.remove(); });
+        document.querySelectorAll('.p-btn').forEach(btn => { 
+            btn.style.backgroundColor = ""; 
+            const tag = btn.querySelector('.user-tag'); 
+            if (tag) tag.remove(); 
+        });
         Object.keys(data).forEach(key => {
             const [f, p] = key.split('_'), btn = document.getElementById(`btn_${f}_${p}`);
-            if (btn) { btn.style.backgroundColor = data[key].color; btn.innerHTML = `${p}<div class="user-tag">${data[key].user}</div>`; }
+            if (btn) { 
+                btn.style.backgroundColor = data[key].color; 
+                btn.innerHTML = `${p}<div class="user-tag">${data[key].user}</div>`; 
+            }
         });
     });
     const pRef = db.ref(`rooms/${currentRoomId}/users/${myNickname}`);
@@ -84,44 +109,34 @@ function resetMyColor() {
     document.getElementById('resetColorBtn').classList.add('hidden');
 }
 
-// 修改：手動填色增加「同層唯一顏色」檢查
 function togglePlatform(f, p) {
     if (!isLocked) return alert("請先選定顏色並點擊確認");
     db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
         const gridData = snap.val() || {};
         const targetKey = `${f}_${p}`;
-        
-        // 如果該格已經是你填的，點擊則取消
         if (gridData[targetKey] && gridData[targetKey].user === myNickname) {
             db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).remove();
             return;
         }
-
-        // 檢查該層是否有其他人已使用你的顏色
         for (let i = 1; i <= 4; i++) {
             const checkKey = `${f}_${i}`;
-            if (gridData[checkKey] && gridData[checkKey].color === myColor) {
-                return; // 同層已有此顏色，禁止填入
-            }
+            if (gridData[checkKey] && gridData[checkKey].color === myColor) return;
         }
         db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).set({ user: myNickname, color: myColor });
     });
 }
 
-// 修改：快捷鍵填色增加「同層唯一顏色」檢查
 function autoFillNextFloor(p) {
     if (!isLocked) return;
     db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
         const gridData = snap.val() || {};
         for (let f = 1; f <= 10; f++) {
-            // 檢查該層四個平台是否已有我的顏色
             let colorExistsInFloor = false;
             for (let i = 1; i <= 4; i++) {
                 if (gridData[`${f}_${i}`] && gridData[`${f}_${i}`].color === myColor) {
                     colorExistsInFloor = true; break;
                 }
             }
-            // 如果該平台沒人填，且該層還沒出現過我的顏色
             if (!gridData[`${f}_${p}`] && !colorExistsInFloor) {
                 db.ref(`rooms/${currentRoomId}/grid/${f}_${p}`).set({ user: myNickname, color: myColor });
                 break;
