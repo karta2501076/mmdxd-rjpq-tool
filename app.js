@@ -93,7 +93,6 @@ function listenToRoom() {
     });
 }
 
-// 選色唯一性機制
 function pickCustomColor() {
     const selectedColor = document.getElementById('colorPicker').value;
     db.ref(`rooms/${currentRoomId}/users`).once('value', snap => {
@@ -112,14 +111,28 @@ function pickCustomColor() {
     });
 }
 
+// 核心修正：點擊重選時，清空該玩家所有填色平台
 function resetMyColor() {
+    if (!confirm("重選顏色將會清空你目前已填寫的所有平台，確定嗎？")) return;
+
     isLocked = false; 
     document.getElementById('myColorStatus').classList.add('hidden');
     document.getElementById('confirmColorBtn').classList.remove('hidden');
     document.getElementById('resetColorBtn').classList.add('hidden');
+
+    // 清空資料庫中屬於我的所有格子
+    db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
+        const gridData = snap.val() || {};
+        const updates = {};
+        Object.keys(gridData).forEach(key => {
+            if (gridData[key].user === myNickname) {
+                updates[key] = null; // 設定為 null 即代表刪除該路徑
+            }
+        });
+        db.ref(`rooms/${currentRoomId}/grid`).update(updates);
+    });
 }
 
-// 手動填色防呆：不能蓋別人的顏色，且同一層不能填兩個位置
 function togglePlatform(f, p) {
     if (!isLocked) return alert("請先選定顏色並點擊確認");
     db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
@@ -136,12 +149,10 @@ function togglePlatform(f, p) {
     });
 }
 
-// 核心修正：快捷鍵邏輯
 function autoFillNextFloor(p) {
     if (!isLocked) return;
     db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
         const gridData = snap.val() || {};
-        // 1. 先找出「我」目前還沒填色的最低樓層是哪一層
         let nextFloorForMe = 1;
         for (let f = 1; f <= 10; f++) {
             let myColorExistsInThisFloor = false;
@@ -155,20 +166,11 @@ function autoFillNextFloor(p) {
                 nextFloorForMe = f;
                 break;
             }
-            if (f === 10) return; // 10層都填滿了
+            if (f === 10) return;
         }
 
-        // 2. 確定了我要填 nextFloorForMe 這一層的平台 p
         const targetKey = `${nextFloorForMe}_${p}`;
-        
-        // 3. 【防呆關鍵】：檢查該層的平台 p 是不是已經有人填了？
-        if (gridData[targetKey]) {
-            // 如果這格已經有任何人（不論是誰）填了色，就直接「沒反應」
-            console.log(`樓層 ${nextFloorForMe} 平台 ${p} 已被佔用，不進行動作`);
-            return; 
-        }
-
-        // 4. 如果沒人填，才正式執行填色
+        if (gridData[targetKey]) return; 
         db.ref(`rooms/${currentRoomId}/grid/${targetKey}`).set({ user: myNickname, color: myColor });
     });
 }
