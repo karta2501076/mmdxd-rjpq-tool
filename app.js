@@ -40,10 +40,9 @@ function createRoom() {
     if (pwd.length !== 4) return alert("請輸入 4 位數密碼");
     const id = Math.floor(1000 + Math.random() * 9000).toString();
     currentRoomId = id;
-    // 創建房間時同時初始化 colors 與 grid 節點
     db.ref('rooms/' + id).set({ 
         password: pwd,
-        colors: { init: "system" }, // 防止路徑不存在導致 transaction 失敗
+        colors: { init: "system" },
         grid: { init: "system" }
     }).then(() => showView('nicknameView'));
 }
@@ -69,27 +68,20 @@ function setNickname() {
     showView('mainGameView');
 }
 
-// 修正：增加錯誤捕捉與確保 currentRoomId 存在
 function pickCustomColor() {
     if (!currentRoomId) return alert("房間資訊遺失，請重新加入");
     const color = document.getElementById('colorPicker').value.toUpperCase();
     const colorKey = color.replace('#', '');
     
-    console.log("正在嘗試鎖定顏色:", color); // 除錯用
-
     db.ref(`rooms/${currentRoomId}/colors/${colorKey}`).transaction((currentValue) => {
-        if (currentValue === null) {
-            return myNickname; 
-        }
-        return; // 已被占用則返回 undefined 終止 transaction
+        if (currentValue === null) return myNickname; 
+        return; 
     }, (error, committed, snapshot) => {
         if (error) {
-            console.error("Transaction failed:", error);
             alert("伺服器同步失敗，請稍後再試");
         } else if (!committed) {
             alert(`這個顏色已經被 ${snapshot.val()} 捷足先登了！`);
         } else {
-            // 成功鎖定
             myColor = color;
             updateColorUI(true);
         }
@@ -122,7 +114,15 @@ function resetMyColor() {
     }
 }
 
+// 離開房間功能（已加入確認視窗）
 function leaveRoom() {
+    // 只有在已經進入房間或設定暱稱時才需要跳出確認（初始頁面取消不需要）
+    if (currentRoomId) {
+        if (!confirm("確定要離開房間嗎？這將會清除你在這個房間的所有標記紀錄。")) {
+            return; 
+        }
+    }
+
     if (myColor && currentRoomId) {
         db.ref(`rooms/${currentRoomId}/colors/${myColor.replace('#', '')}`).remove();
         db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
@@ -134,12 +134,20 @@ function leaveRoom() {
             }
         });
     }
+
     if (currentRoomId) db.ref(`rooms/${currentRoomId}/grid`).off();
-    currentRoomId = null; myNickname = ""; myColor = null;
+    
+    currentRoomId = null; 
+    myNickname = ""; 
+    myColor = null;
+    
     updateColorUI(false);
+    
+    // 清除網址參數
     const url = new URL(window.location);
     url.searchParams.delete('room');
     window.history.pushState({}, '', url);
+    
     showView('startView');
 }
 
@@ -152,7 +160,6 @@ function togglePlatform(f, p) {
         if (val && val.color === myColor) {
             ref.remove();
         } else if (!val) {
-            // 確保同層樓自己只能點一個
             db.ref(`rooms/${currentRoomId}/grid`).once('value', gSnap => {
                 const gData = gSnap.val() || {};
                 Object.keys(gData).forEach(k => { 
@@ -186,7 +193,11 @@ function listenToRoom() {
     });
 }
 
-function clearAllPlatforms() { if (confirm("確定清空嗎？")) db.ref(`rooms/${currentRoomId}/grid`).set({ init: "system" }); }
+function clearAllPlatforms() { 
+    if (confirm("確定清空全體隊友的所有標記嗎？（此操作不可逆）")) {
+        db.ref(`rooms/${currentRoomId}/grid`).set({ init: "system" }); 
+    }
+}
 
 function copyShareLink() {
     const link = window.location.origin + window.location.pathname + "?room=" + currentRoomId;
