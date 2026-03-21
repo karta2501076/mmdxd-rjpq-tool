@@ -5,67 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>超讚RJPQ小工具</title>
     <style>
-        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: #1a1a21; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; box-sizing: border-box; font-size: 1rem; }
-        .container { background: #2d2d37; padding: 20px; border-radius: 18px; box-shadow: 0 6px 25px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
-        h2 { margin: 0; color: #fff; font-size: 1.5rem; }
-        .hint-text { font-size: 0.75rem; color: #888; margin-bottom: 12px; }
+        /* 減少整體 padding 避免擠壓出滾動條 */
+        body { font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; background: #1a1a21; color: #fff; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 10px; box-sizing: border-box; font-size: 0.95rem; overflow: hidden; }
+        .container { background: #2d2d37; padding: 18px; border-radius: 16px; box-shadow: 0 6px 25px rgba(0,0,0,0.6); display: flex; flex-direction: column; align-items: center; }
+        h2 { margin: 0; color: #fff; font-size: 1.4rem; }
+        .hint-text { font-size: 0.7rem; color: #888; margin-bottom: 8px; }
         
-        #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 380px; }
+        #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 360px; }
         
-        /* 左右排版：適中寬度與間距 */
-        #mainGameView { display: flex; flex-direction: row; gap: 15px; align-items: flex-start; }
+        /* 左右排版：寬度與間距再次微調 */
+        #mainGameView { display: flex; flex-direction: row; gap: 12px; align-items: flex-start; }
 
-        /* 左側主要控制區：430px 是平衡點 */
-        .game-main-content { display: flex; flex-direction: column; align-items: center; width: 430px; }
+        /* 左側主要控制區：縮減至 420px */
+        .game-main-content { display: flex; flex-direction: column; align-items: center; width: 420px; }
 
-        input { width: 90%; padding: 10px; border-radius: 8px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.1rem; }
+        input { width: 90%; padding: 8px; border-radius: 8px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 1.1rem; }
         button { border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; }
         
-        .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; font-size: 1.2rem; }
-        .secondary-btn { background: #444; color: white; padding: 6px 10px; font-size: 0.85rem; }
-        .exit-btn { background: #6c757d; color: white; padding: 6px 10px; font-size: 0.85rem; }
+        .primary-btn { background: #007bff; color: white; width: 100%; padding: 10px; font-size: 1.1rem; }
+        .secondary-btn { background: #444; color: white; padding: 5px 8px; font-size: 0.8rem; }
+        .exit-btn { background: #6c757d; color: white; padding: 5px 8px; font-size: 0.8rem; }
         
-        .promo-btn { color: white; padding: 8px 0; font-size: 0.9rem; text-decoration: none; border-radius: 9px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; min-width: 120px; }
+        .promo-btn { color: white; padding: 7px 0; font-size: 0.85rem; text-decoration: none; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; min-width: 115px; }
         .yt-btn { background: #ff0000; }
         .tw-btn { background: #9146ff; } 
 
-        .header-info { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
-        .room-code { font-size: 1.1rem; }
-        .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.2rem; }
-        .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 7px; border: 1px solid #444; text-align: center; flex-grow: 1; }
-        .action-group { display: flex; gap: 5px; }
+        .header-info { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 6px; }
+        .room-code { font-size: 1rem; }
+        .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.15rem; }
+        .credit-info { font-size: 0.8rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px; border: 1px solid #444; text-align: center; flex-grow: 1; }
+        .action-group { display: flex; gap: 4px; }
 
-        /* 右側在線名單：縮減至 150px */
+        /* 右側在線名單：縮減至 140px */
         .user-list-sidebar { 
-            width: 150px; 
+            width: 140px; 
             background: rgba(0,0,0,0.35); 
-            padding: 12px; 
-            border-radius: 12px; 
+            padding: 10px; 
+            border-radius: 10px; 
             border: 1px solid #444; 
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
         }
-        .user-list-title { font-size: 0.9rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
-        #userList { display: flex; flex-direction: column; gap: 8px; }
-        .user-badge { font-size: 0.85rem; padding: 6px; border-radius: 6px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; }
+        .user-list-title { font-size: 0.85rem; font-weight: bold; color: #aaa; margin-bottom: 8px; border-bottom: 1px solid #555; padding-bottom: 4px; text-align: center; }
+        #userList { display: flex; flex-direction: column; gap: 6px; }
+        .user-badge { font-size: 0.8rem; padding: 5px; border-radius: 6px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; }
 
-        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 12px; margin-bottom: 10px; box-sizing: border-box; }
-        #colorPicker { width: 40px; height: 40px; border: none; background: none; cursor: pointer; padding: 0; }
-        .status-tag { font-size: 0.85rem; padding: 4px 8px; border-radius: 6px; background: #444; }
+        .picker-bar { width: 100%; display: flex; gap: 8px; justify-content: center; align-items: center; background: #1a1a21; padding: 8px; border-radius: 10px; margin-bottom: 8px; box-sizing: border-box; }
+        #colorPicker { width: 36px; height: 36px; border: none; background: none; cursor: pointer; padding: 0; }
+        .status-tag { font-size: 0.8rem; padding: 3px 6px; border-radius: 5px; background: #444; }
 
-        /* 格子高度 42px，數字 1.35rem */
-        table { width: 100%; border-spacing: 3px; table-layout: fixed; }
-        .floor-label { width: 40px; text-align: center; font-weight: bold; font-size: 1rem; color: #888; }
-        .p-btn { width: 100%; height: 42px; background: #3c3c46; border: none; border-radius: 9px; color: #fff !important; font-weight: bold; cursor: pointer; font-size: 1.35rem; position: relative; overflow: hidden; }
-        .user-tag { position: absolute; bottom: 1px; right: 2px; background: rgba(0, 0, 0, 0.75); color: white; font-size: 0.6rem; padding: 1px 3px; border-radius: 2px; pointer-events: none; }
+        /* 格子高度降至 39px */
+        table { width: 100%; border-spacing: 2px; table-layout: fixed; }
+        .floor-label { width: 35px; text-align: center; font-weight: bold; font-size: 0.95rem; color: #888; }
+        .p-btn { width: 100%; height: 39px; background: #3c3c46; border: none; border-radius: 8px; color: #fff !important; font-weight: bold; cursor: pointer; font-size: 1.25rem; position: relative; overflow: hidden; }
+        .user-tag { position: absolute; bottom: 1px; right: 1px; background: rgba(0, 0, 0, 0.75); color: white; font-size: 0.55rem; padding: 0px 2px; border-radius: 2px; pointer-events: none; }
         
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h2>超讚RJPQ小工具</h2>
     <div class="hint-text">快捷鍵：按數字鍵 1-4 由下往上自動填色</div>
@@ -98,8 +98,8 @@
             <div class="header-info">
                 <div class="info-row">
                     <div class="room-code">房號：<span id="activeRoomId">------</span></div>
-                    <a href="https://www.youtube.com/@yulihong22" target="_blank" class="promo-btn yt-btn">咪咪蛋的 YT</a>
-                    <a href="https://www.twitch.tv/yulihong22" target="_blank" class="promo-btn tw-btn">咪咪蛋 Twitch</a>
+                    <a href="https://www.youtube.com/@yulihong22" target="_blank" class="promo-btn yt-btn">咪咪蛋YT</a>
+                    <a href="https://www.twitch.tv/yulihong22" target="_blank" class="promo-btn tw-btn">咪咪蛋Twitch</a>
                 </div>
                 <div class="info-row">
                     <div class="credit-info">MMDxD | 咖塔</div>
@@ -133,6 +133,6 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-<script src="app.js?v=20260321_balanced"></script>
+<script src="app.js?v=20260321_final_tiny"></script>
 </body>
 </html>
