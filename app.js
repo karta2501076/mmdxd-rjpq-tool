@@ -48,7 +48,45 @@ function joinRoom() {
 function setNickname() {
     const nick = document.getElementById('nicknameInput').value;
     if (!nick) return alert("請輸入暱稱");
-    myNickname = nick; initGrid(); listenToRoom(); listenToColors(); showView('mainGameView');
+    myNickname = nick; 
+    initGrid(); 
+    listenToRoom(); 
+    listenToColors(); 
+    showView('mainGameView');
+}
+
+// 離開房間功能
+function leaveRoom() {
+    // 如果在遊戲中，先嘗試清除自己的顏色占用
+    if (myColor && currentRoomId) {
+        const colorKey = myColor.replace('#', '');
+        db.ref(`rooms/${currentRoomId}/colors/${colorKey}`).remove();
+        // 清除自己畫的格子
+        db.ref(`rooms/${currentRoomId}/grid`).once('value', snap => {
+            const data = snap.val();
+            if (data) Object.keys(data).forEach(k => { 
+                if (data[k].color === myColor) db.ref(`rooms/${currentRoomId}/grid/${k}`).remove(); 
+            });
+        });
+    }
+
+    // 關閉 Firebase 監聽器，避免浪費連線資源
+    if (currentRoomId) {
+        db.ref(`rooms/${currentRoomId}/grid`).off();
+        db.ref(`rooms/${currentRoomId}/colors`).off();
+    }
+
+    // 重設本地變數
+    currentRoomId = null;
+    myNickname = "";
+    myColor = null;
+    
+    // 清除網址參數並回到起始畫面
+    const url = new URL(window.location);
+    url.searchParams.delete('room');
+    window.history.pushState({}, '', url);
+    
+    showView('startView');
 }
 
 function selectColor(color) {
