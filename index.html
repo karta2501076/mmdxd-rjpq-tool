@@ -17,6 +17,7 @@
         
         .primary-btn { background: #007bff; color: white; width: 100%; padding: 12px; font-size: 1.2rem; }
         .secondary-btn { background: #444; color: white; padding: 6px 10px; font-size: 0.85rem; }
+        .exit-btn { background: #6c757d; color: white; padding: 6px 10px; font-size: 0.85rem; } /* 離開按鈕樣式 */
         
         .promo-btn { color: white; padding: 6px 12px; font-size: 0.85rem; text-decoration: none; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; font-weight: bold; }
         .yt-btn { background: #ff0000; }
@@ -70,6 +71,7 @@
         <p>準備加入房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入你的暱稱" maxlength="6">
         <button class="primary-btn" onclick="setNickname()">開始同步</button>
+        <button class="secondary-btn" onclick="leaveRoom()">取消</button>
     </div>
 
     <div id="mainGameView" class="hidden">
@@ -84,6 +86,7 @@
                 <div class="action-group">
                     <button class="secondary-btn" style="background:#28a745;" onclick="copyShareLink()">分享</button>
                     <button class="secondary-btn" onclick="clearAllPlatforms()">清空</button>
+                    <button class="exit-btn" onclick="leaveRoom()">離開</button>
                 </div>
             </div>
         </div>
