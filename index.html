@@ -6,7 +6,7 @@
     <title>超讚RJPQ小工具</title>
     <style>
         /* ====================================================== */
-        /* 電腦網頁版基礎樣式 */
+        /* 電腦網頁版基礎樣式 (恢復原始大小) */
         /* ====================================================== */
         body { 
             font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; 
@@ -61,12 +61,12 @@
         
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 380px; }
         
+        /* 移除 zoom，變回原本的大小 */
         #mainGameView { 
             display: flex; 
             flex-direction: row; 
             gap: 15px; 
             align-items: flex-start; 
-            zoom: 1.01; 
         }
         .game-main-content { display: flex; flex-direction: column; align-items: center; width: 445px; }
 
@@ -123,7 +123,7 @@
         #userList { display: flex; flex-direction: column; gap: 7px; }
         .user-badge { font-size: 0.85rem; padding: 6px; border-radius: 7px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* === 暱稱標籤樣式修正 === */
+        /* 平台格子樣式 (回歸原本高度與設定) */
         .p-btn { 
             width: 100%; 
             height: 40px; 
@@ -131,24 +131,22 @@
             color: #fff !important; 
             font-size: 1.35rem; 
             box-shadow: 0 4px 0 #2a2a32; 
-            position: relative; /* 關鍵：讓暱稱標籤相對此按鈕定位 */
-            overflow: visible; /* 確保標籤不會被切掉 */
+            position: relative;
+            overflow: visible;
         }
         
         .user-tag { 
             position: absolute; 
             bottom: 2px; 
             right: 2px; 
-            background: rgba(0, 0, 0, 0.85) !important; /* 強制黑底 */
-            color: #fff !important; /* 強制白字 */
+            background: rgba(0, 0, 0, 0.85) !important;
+            color: #fff !important;
             font-size: 0.6rem; 
             padding: 1px 4px; 
             border-radius: 3px; 
             pointer-events: none; 
             z-index: 10;
             line-height: 1;
-            font-weight: normal;
-            border: 0.5px solid rgba(255,255,255,0.2);
         }
 
         .hidden { display: none !important; }
@@ -159,16 +157,15 @@
         @media (max-width: 768px) {
             body { padding: 5px; align-items: flex-start; } 
             .container { width: 100%; padding: 15px 10px; border-radius: 0; }
-            .home-large-title h2 { font-size: 1.8rem; }
-            #mainGameView { flex-direction: column; width: 100%; zoom: 1; align-items: center; }
+            #mainGameView { flex-direction: column; width: 100%; align-items: center; }
             .game-main-content { width: 100%; }
             
             .user-list-sidebar { width: 100%; margin-top: 15px; padding: 15px; }
             .user-badge { justify-content: center; display: flex; align-items: center; padding: 10px; font-size: 1rem; }
             
-            /* 手機版按鈕較大，微調標籤位置 */
+            /* 保持手機版原本的大按鈕，暱稱標籤貼齊右下 */
             .p-btn { height: 55px; font-size: 1.6rem; } 
-            .user-tag { bottom: 4px; right: 4px; font-size: 0.65rem; padding: 2px 5px; }
+            .user-tag { bottom: 4px; right: 4px; font-size: 0.65rem; }
 
             .info-row { flex-direction: column; }
             .promo-btn { width: 100%; }
@@ -203,7 +200,7 @@
     <div id="nicknameView" class="hidden">
         <p>房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入暱稱" maxlength="6">
-        <button class="primary-btn" onclick="setNickname()">加入</button>
+        <button class="primary-btn" onclick="setNickname()">加入遊戲</button>
         <button class="secondary-btn" onclick="leaveRoom()">取消</button>
     </div>
 
@@ -230,7 +227,7 @@
                 <input type="color" id="colorPicker" value="#00EC00">
                 <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff; box-shadow: 0 3px 0 #0056b3;" onclick="pickCustomColor()">確認</button>
                 <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
-                <div id="myColorStatus" class="hidden status-tag">已鎖定</div>
+                <div id="myColorStatus" class="hidden status-tag" style="color:#f1c40f; font-weight:bold; font-size:0.85rem;">已鎖定</div>
             </div>
 
             <table><tbody id="gridBody"></tbody></table>
