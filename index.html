@@ -26,7 +26,7 @@
         
         .container { 
             background: #2d2d37; 
-            padding: 22px 25px; 
+            padding: 18px 22px; 
             border-radius: 16px; 
             box-shadow: 0 6px 25px rgba(0,0,0,0.6); 
             display: flex; 
@@ -35,19 +35,25 @@
             transition: all 0.3s ease;
         }
         
-        /* === 關鍵修改：放大標題文字 === */
+        /* 預設標題大小 (房間內使用) */
         h2 { 
             margin: 0; 
             color: #fff; 
-            font-size: 2.2rem; /* 從 1.5rem 放大到 2.2rem */
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5); /* 增加一點陰影讓大字更立體 */
-            letter-spacing: 1px;
+            font-size: 1.5rem; 
+            transition: font-size 0.2s;
         } 
+
+        /* === 僅在首頁視圖時放大標題 === */
+        .home-large-title h2 {
+            font-size: 2.3rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 5px;
+        }
 
         .welcome-text {
             color: #fff;
             font-size: 1.2rem;
-            margin: 18px 0 8px 0;
+            margin: 15px 0 5px 0;
             font-weight: bold;
             text-align: center;
         }
@@ -55,7 +61,7 @@
         .hint-text { 
             font-size: 0.75rem; 
             color: #888; 
-            margin-bottom: 20px; 
+            margin-bottom: 15px; 
             font-weight: normal; 
             text-align: center; 
             line-height: 1.4;
@@ -65,9 +71,9 @@
         #mainGameView { display: flex; flex-direction: row; gap: 15px; align-items: flex-start; }
         .game-main-content { display: flex; flex-direction: column; align-items: center; width: 445px; }
 
-        input { width: 90%; padding: 12px; border-radius: 9px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 16px; box-sizing: border-box; }
+        input { width: 90%; padding: 10px; border-radius: 9px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 16px; box-sizing: border-box; }
         
-        /* === 按鈕 3D 特效 === */
+        /* === 按鈕 3D 特效基礎 === */
         button, .promo-btn { 
             border-radius: 9px; 
             border: none; 
@@ -88,54 +94,60 @@
             background: #007bff; 
             color: white !important; 
             width: 100%; 
-            padding: 14px; 
-            font-size: 1.25rem;
+            padding: 12px; 
+            font-size: 1.2rem;
             box-shadow: 0 5px 0 #004a99; 
             margin-bottom: 5px;
         }
         .primary-btn:hover { box-shadow: 0 7px 0 #004a99; }
         .primary-btn:active { top: 4px; box-shadow: 0 1px 0 #004a99; }
 
-        .secondary-btn { background: #444; color: white !important; padding: 6px 14px; font-size: 0.85rem; box-shadow: 0 3px 0 #222; }
+        .secondary-btn { background: #444; color: white !important; padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 3px 0 #222; }
+        .secondary-btn:hover { box-shadow: 0 5px 0 #222; }
         .secondary-btn:active { top: 2px; box-shadow: 0 1px 0 #222; }
 
-        .share-btn { background: #28a745; color: white !important; padding: 6px 14px; font-size: 0.85rem; box-shadow: 0 3px 0 #1e7e34; }
+        .share-btn { background: #28a745; color: white !important; padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 3px 0 #1e7e34; }
+        .share-btn:hover { box-shadow: 0 5px 0 #1e7e34; }
         .share-btn:active { top: 2px; box-shadow: 0 1px 0 #1e7e34; }
 
-        .exit-btn { background: #6c757d; color: white !important; padding: 6px 14px; font-size: 0.85rem; box-shadow: 0 3px 0 #444; }
+        .exit-btn { background: #6c757d; color: white !important; padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 3px 0 #444; }
+        .exit-btn:hover { box-shadow: 0 5px 0 #444; }
         .exit-btn:active { top: 2px; box-shadow: 0 1px 0 #444; }
         
-        .yt-btn { background: #ff0000; color: white !important; min-width: 125px; padding: 10px 0; font-size: 0.95rem; box-shadow: 0 4px 0 #990000; }
+        .yt-btn { background: #ff0000; color: white !important; min-width: 120px; padding: 8px 0; font-size: 0.9rem; box-shadow: 0 4px 0 #990000; }
+        .yt-btn:hover { box-shadow: 0 6px 0 #990000; }
         .yt-btn:active { top: 3px; box-shadow: 0 1px 0 #990000; }
 
-        .tw-btn { background: #9146ff; color: white !important; min-width: 125px; padding: 10px 0; font-size: 0.95rem; box-shadow: 0 4px 0 #5c2db3; }
+        .tw-btn { background: #9146ff; color: white !important; min-width: 120px; padding: 8px 0; font-size: 0.9rem; box-shadow: 0 4px 0 #5c2db3; }
+        .tw-btn:hover { box-shadow: 0 6px 0 #5c2db3; }
         .tw-btn:active { top: 3px; box-shadow: 0 1px 0 #5c2db3; }
 
         /* ====================================================== */
-        /* 遊戲資訊與網格 */
+        /* 遊戲內資訊列與網格 */
         /* ====================================================== */
-        .header-info { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
-        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 10px; }
-        .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.3rem; }
-        .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 6px 12px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; }
+        .header-info { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+        .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
+        .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.2rem; }
+        .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; }
 
         .user-list-sidebar { width: 150px; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px; border: 1px solid #444; box-sizing: border-box; display: flex; flex-direction: column; }
         .user-list-title { font-size: 0.85rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
         #userList { display: flex; flex-direction: column; gap: 7px; }
         .user-badge { font-size: 0.85rem; padding: 6px; border-radius: 7px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 12px; border-radius: 11px; margin-bottom: 12px; box-sizing: border-box; }
-        #colorPicker { width: 44px; height: 44px; border: none; background: none; cursor: pointer; padding: 0; }
+        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 11px; margin-bottom: 10px; box-sizing: border-box; }
+        #colorPicker { width: 40px; height: 40px; border: none; background: none; cursor: pointer; padding: 0; }
         
-        table { width: 100%; border-spacing: 3px; table-layout: fixed; }
-        .floor-label { width: 38px; text-align: center; font-weight: bold; font-size: 1.1rem; color: #888; }
+        /* 遊戲網格按鈕 - 確保數字顏色為白色 */
+        table { width: 100%; border-spacing: 2.5px; table-layout: fixed; }
+        .floor-label { width: 35px; text-align: center; font-weight: bold; font-size: 1rem; color: #888; }
         
         .p-btn { 
             width: 100%; 
-            height: 42px; 
+            height: 40px; 
             background: #3c3c46; 
             color: #fff !important; 
-            font-size: 1.4rem; 
+            font-size: 1.35rem; 
             box-shadow: 0 4px 0 #2a2a32; 
         }
         .p-btn:active { top: 3px; box-shadow: 0 1px 0 #2a2a32; }
@@ -144,28 +156,25 @@
         .hidden { display: none !important; }
 
         /* ====================================================== */
-        /* 手機版修正 */
+        /* 手機版樣式 */
         /* ====================================================== */
         @media (max-width: 768px) {
             body { padding: 5px; align-items: flex-start; } 
-            .container { width: 100%; padding: 20px 12px; border-radius: 0; }
-            h2 { font-size: 1.8rem; } /* 手機版標題稍微縮小一點避免破版 */
-            #startView, #createView, #joinView, #nicknameView { width: 100%; }
-            #mainGameView { flex-direction: column; align-items: center; width: 100%; }
+            .container { width: 100%; padding: 15px 10px; border-radius: 0; }
+            .home-large-title h2 { font-size: 1.8rem; } /* 手機版首頁標題縮小 */
+            #mainGameView { flex-direction: column; width: 100%; }
             .game-main-content { width: 100%; }
-            table { border-spacing: 4px; }
-            .p-btn { height: 58px; font-size: 1.7rem; } 
-            .info-row { flex-direction: column; gap: 12px; }
+            .p-btn { height: 55px; font-size: 1.6rem; } 
+            .info-row { flex-direction: column; }
             .promo-btn { width: 100%; }
         }
     </style>
 </head>
 <body>
-<div class="container">
+<div class="container home-large-title" id="mainContainer">
     <h2>超讚RJPQ小工具</h2>
     
     <div id="welcomeMsg" class="welcome-text">Hi 我是咖塔<br>祝您小工具用的愉快</div>
-
     <div class="hint-text">快捷鍵: 1~4 可快速填色，0 取消上一層填色<br>(現在手機也能用囉)</div>
 
     <div id="startView">
@@ -189,7 +198,7 @@
     <div id="nicknameView" class="hidden">
         <p>房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入暱稱" maxlength="6">
-        <button class="primary-btn" onclick="setNickname()">加入遊戲</button>
+        <button class="primary-btn" onclick="setNickname()">加入</button>
         <button class="secondary-btn" onclick="leaveRoom()">取消</button>
     </div>
 
@@ -210,18 +219,8 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="picker-bar">
-                <span>選擇顏色：</span>
-                <input type="color" id="colorPicker" value="#00EC00">
-                <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff; box-shadow: 0 3px 0 #0056b3;" onclick="pickCustomColor()">確認</button>
-                <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
-                <div id="myColorStatus" class="hidden status-tag">已鎖定</div>
-            </div>
-
             <table><tbody id="gridBody"></tbody></table>
         </div>
-
         <div class="user-list-sidebar">
             <div class="user-list-title">在線隊員</div>
             <div id="userList"></div>
@@ -233,12 +232,23 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="app.js"></script>
 <script>
+    // 動態控制標題大小與歡迎詞
     const originalShowView = showView;
     showView = (viewId) => {
         originalShowView(viewId);
+        const container = document.getElementById('mainContainer');
         const welcome = document.getElementById('welcomeMsg');
-        if (viewId === 'mainGameView') welcome.classList.add('hidden');
-        else if (viewId === 'startView') welcome.classList.remove('hidden');
+        
+        if (viewId === 'mainGameView') {
+            container.classList.remove('home-large-title'); // 進入房間，縮小標題
+            welcome.classList.add('hidden');
+        } else if (viewId === 'startView') {
+            container.classList.add('home-large-title'); // 回到首頁，放大標題
+            welcome.classList.remove('hidden');
+        } else {
+            // 在創建或加入房間頁面時，標題保持大的
+            container.classList.add('home-large-title');
+        }
     };
 </script>
 </body>
