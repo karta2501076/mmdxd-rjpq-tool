@@ -6,7 +6,7 @@
     <title>超讚RJPQ小工具</title>
     <style>
         /* ====================================================== */
-        /* 電腦網頁版基礎樣式 (恢復原始大小) */
+        /* 電腦網頁版基礎樣式 */
         /* ====================================================== */
         body { 
             font-family: 'Segoe UI', 'Microsoft JhengHei', sans-serif; 
@@ -35,7 +35,12 @@
             transition: all 0.3s ease;
         }
         
-        h2 { margin: 0; color: #fff; font-size: 1.5rem; } 
+        h2 { 
+            margin: 0; 
+            color: #fff; 
+            font-size: 1.5rem; 
+            transition: font-size 0.2s;
+        } 
 
         .home-large-title h2 {
             font-size: 2.3rem;
@@ -55,18 +60,19 @@
             font-size: 0.75rem; 
             color: #888; 
             margin-bottom: 15px; 
+            font-weight: normal; 
             text-align: center; 
             line-height: 1.4;
         }
         
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 380px; }
         
-        /* 移除 zoom，變回原本的大小 */
         #mainGameView { 
             display: flex; 
             flex-direction: row; 
             gap: 15px; 
             align-items: flex-start; 
+            zoom: 1.01; 
         }
         .game-main-content { display: flex; flex-direction: column; align-items: center; width: 445px; }
 
@@ -117,13 +123,26 @@
 
         .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 11px; margin-bottom: 10px; box-sizing: border-box; }
         #colorPicker { width: 40px; height: 40px; border: none; background: none; cursor: pointer; padding: 0; }
+        .status-tag { font-size: 0.85rem; color: #f1c40f; font-weight: bold; }
 
-        .user-list-sidebar { width: 150px; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px; border: 1px solid #444; box-sizing: border-box; display: flex; flex-direction: column; }
+        /* 在線成員側邊欄 */
+        .user-list-sidebar { 
+            width: 150px; 
+            background: rgba(0,0,0,0.35); 
+            padding: 12px; 
+            border-radius: 12px; 
+            border: 1px solid #444; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+        }
         .user-list-title { font-size: 0.85rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
         #userList { display: flex; flex-direction: column; gap: 7px; }
         .user-badge { font-size: 0.85rem; padding: 6px; border-radius: 7px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        /* 平台格子樣式 (回歸原本高度與設定) */
+        table { width: 100%; border-spacing: 2.5px; table-layout: fixed; }
+        .floor-label { width: 35px; text-align: center; font-weight: bold; font-size: 1rem; color: #888; }
+        
         .p-btn { 
             width: 100%; 
             height: 40px; 
@@ -131,42 +150,35 @@
             color: #fff !important; 
             font-size: 1.35rem; 
             box-shadow: 0 4px 0 #2a2a32; 
-            position: relative;
-            overflow: visible;
         }
         
-        .user-tag { 
-            position: absolute; 
-            bottom: 2px; 
-            right: 2px; 
-            background: rgba(0, 0, 0, 0.85) !important;
-            color: #fff !important;
-            font-size: 0.6rem; 
-            padding: 1px 4px; 
-            border-radius: 3px; 
-            pointer-events: none; 
-            z-index: 10;
-            line-height: 1;
-        }
-
         .hidden { display: none !important; }
 
         /* ====================================================== */
-        /* 手機版樣式 */
+        /* 手機版樣式修正 */
         /* ====================================================== */
         @media (max-width: 768px) {
             body { padding: 5px; align-items: flex-start; } 
             .container { width: 100%; padding: 15px 10px; border-radius: 0; }
-            #mainGameView { flex-direction: column; width: 100%; align-items: center; }
+            .home-large-title h2 { font-size: 1.8rem; }
+            #mainGameView { flex-direction: column; width: 100%; zoom: 1; align-items: center; }
             .game-main-content { width: 100%; }
             
-            .user-list-sidebar { width: 100%; margin-top: 15px; padding: 15px; }
-            .user-badge { justify-content: center; display: flex; align-items: center; padding: 10px; font-size: 1rem; }
+            /* 手機版成員列表：與平台對齊置中且寬一些 */
+            .user-list-sidebar { 
+                width: 100%; /* 與平台同寬 */
+                margin-top: 15px; 
+                padding: 15px;
+            }
+            .user-badge { 
+                justify-content: center; 
+                display: flex; 
+                align-items: center;
+                padding: 10px; /* 增加高度更易點擊閱讀 */
+                font-size: 1rem;
+            }
             
-            /* 保持手機版原本的大按鈕，暱稱標籤貼齊右下 */
             .p-btn { height: 55px; font-size: 1.6rem; } 
-            .user-tag { bottom: 4px; right: 4px; font-size: 0.65rem; }
-
             .info-row { flex-direction: column; }
             .promo-btn { width: 100%; }
         }
@@ -200,7 +212,7 @@
     <div id="nicknameView" class="hidden">
         <p>房間：<span id="roomIdDisplay" style="color:#f1c40f">------</span></p>
         <input type="text" id="nicknameInput" placeholder="輸入暱稱" maxlength="6">
-        <button class="primary-btn" onclick="setNickname()">加入遊戲</button>
+        <button class="primary-btn" onclick="setNickname()">加入</button>
         <button class="secondary-btn" onclick="leaveRoom()">取消</button>
     </div>
 
@@ -227,7 +239,7 @@
                 <input type="color" id="colorPicker" value="#00EC00">
                 <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff; box-shadow: 0 3px 0 #0056b3;" onclick="pickCustomColor()">確認</button>
                 <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
-                <div id="myColorStatus" class="hidden status-tag" style="color:#f1c40f; font-weight:bold; font-size:0.85rem;">已鎖定</div>
+                <div id="myColorStatus" class="hidden status-tag">已鎖定</div>
             </div>
 
             <table><tbody id="gridBody"></tbody></table>
