@@ -131,6 +131,11 @@
         .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.2rem; }
         .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; }
 
+        /* 選色列樣式 */
+        .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 11px; margin-bottom: 10px; box-sizing: border-box; }
+        #colorPicker { width: 40px; height: 40px; border: none; background: none; cursor: pointer; padding: 0; }
+        .status-tag { font-size: 0.85rem; color: #f1c40f; font-weight: bold; }
+
         .user-list-sidebar { width: 150px; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px; border: 1px solid #444; box-sizing: border-box; display: flex; flex-direction: column; }
         .user-list-title { font-size: 0.85rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
         #userList { display: flex; flex-direction: column; gap: 7px; }
@@ -216,8 +221,18 @@
                     </div>
                 </div>
             </div>
+
+            <div class="picker-bar">
+                <span>選擇顏色：</span>
+                <input type="color" id="colorPicker" value="#00EC00">
+                <button id="confirmColorBtn" class="secondary-btn" style="background:#007bff; box-shadow: 0 3px 0 #0056b3;" onclick="pickCustomColor()">確認</button>
+                <button id="resetColorBtn" class="hidden secondary-btn" onclick="resetMyColor()">重選</button>
+                <div id="myColorStatus" class="hidden status-tag">已鎖定</div>
+            </div>
+
             <table><tbody id="gridBody"></tbody></table>
         </div>
+
         <div class="user-list-sidebar">
             <div class="user-list-title">在線隊員</div>
             <div id="userList"></div>
