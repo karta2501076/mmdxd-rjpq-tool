@@ -42,7 +42,6 @@
             transition: font-size 0.2s;
         } 
 
-        /* 僅在首頁視圖時放大標題 */
         .home-large-title h2 {
             font-size: 2.3rem;
             text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -68,19 +67,17 @@
         
         #startView, #createView, #joinView, #nicknameView { display: flex; flex-direction: column; align-items: center; gap: 15px; width: 380px; }
         
-        /* === 關鍵修改：房間內 UI 精確調整為 1.01 倍 === */
         #mainGameView { 
             display: flex; 
             flex-direction: row; 
             gap: 15px; 
             align-items: flex-start; 
-            zoom: 1.01; /* 整體放大 1.01 倍，既有放大感又不會壓迫邊界 */
+            zoom: 1.01; 
         }
         .game-main-content { display: flex; flex-direction: column; align-items: center; width: 445px; }
 
         input { width: 90%; padding: 10px; border-radius: 9px; border: 1px solid #444; background: #1a1a21; color: #fff; font-size: 16px; box-sizing: border-box; }
         
-        /* === 按鈕 3D 特效基礎 === */
         button, .promo-btn { 
             border-radius: 9px; 
             border: none; 
@@ -105,38 +102,40 @@
             box-shadow: 0 5px 0 #004a99; 
             margin-bottom: 5px;
         }
-        .primary-btn:hover { box-shadow: 0 7px 0 #004a99; }
         .primary-btn:active { top: 4px; box-shadow: 0 1px 0 #004a99; }
 
         .secondary-btn { background: #444; color: white !important; padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 3px 0 #222; }
-        .secondary-btn:hover { box-shadow: 0 5px 0 #222; }
         .secondary-btn:active { top: 2px; box-shadow: 0 1px 0 #222; }
 
         .share-btn { background: #28a745; color: white !important; padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 3px 0 #1e7e34; }
-        .share-btn:hover { box-shadow: 0 5px 0 #1e7e34; }
         .share-btn:active { top: 2px; box-shadow: 0 1px 0 #1e7e34; }
 
         .exit-btn { background: #6c757d; color: white !important; padding: 6px 12px; font-size: 0.85rem; box-shadow: 0 3px 0 #444; }
-        .exit-btn:hover { box-shadow: 0 5px 0 #444; }
         .exit-btn:active { top: 2px; box-shadow: 0 1px 0 #444; }
         
         .yt-btn { background: #ff0000; color: white !important; min-width: 120px; padding: 8px 0; font-size: 0.9rem; box-shadow: 0 4px 0 #990000; }
-        .yt-btn:active { top: 3px; box-shadow: 0 1px 0 #990000; }
-
         .tw-btn { background: #9146ff; color: white !important; min-width: 120px; padding: 8px 0; font-size: 0.9rem; box-shadow: 0 4px 0 #5c2db3; }
-        .tw-btn:active { top: 3px; box-shadow: 0 1px 0 #5c2db3; }
 
         .header-info { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
         .info-row { display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 8px; }
         .room-code span { color: #f1c40f; font-weight: bold; font-size: 1.2rem; }
         .credit-info { font-size: 0.85rem; color: #aaa; background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 8px; border: 1px solid #444; text-align: center; flex-grow: 1; }
 
-        /* 選色列樣式 */
         .picker-bar { width: 100%; display: flex; gap: 10px; justify-content: center; align-items: center; background: #1a1a21; padding: 10px; border-radius: 11px; margin-bottom: 10px; box-sizing: border-box; }
         #colorPicker { width: 40px; height: 40px; border: none; background: none; cursor: pointer; padding: 0; }
         .status-tag { font-size: 0.85rem; color: #f1c40f; font-weight: bold; }
 
-        .user-list-sidebar { width: 150px; background: rgba(0,0,0,0.35); padding: 12px; border-radius: 12px; border: 1px solid #444; box-sizing: border-box; display: flex; flex-direction: column; }
+        /* 在線成員側邊欄 */
+        .user-list-sidebar { 
+            width: 150px; 
+            background: rgba(0,0,0,0.35); 
+            padding: 12px; 
+            border-radius: 12px; 
+            border: 1px solid #444; 
+            box-sizing: border-box; 
+            display: flex; 
+            flex-direction: column; 
+        }
         .user-list-title { font-size: 0.85rem; font-weight: bold; color: #aaa; margin-bottom: 10px; border-bottom: 1px solid #555; padding-bottom: 5px; text-align: center; }
         #userList { display: flex; flex-direction: column; gap: 7px; }
         .user-badge { font-size: 0.85rem; padding: 6px; border-radius: 7px; color: #fff; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -152,20 +151,33 @@
             font-size: 1.35rem; 
             box-shadow: 0 4px 0 #2a2a32; 
         }
-        .p-btn:active { top: 3px; box-shadow: 0 1px 0 #2a2a32; }
         
-        .user-tag { position: absolute; bottom: 1px; right: 2px; background: rgba(0, 0, 0, 0.75); color: white; font-size: 0.6rem; padding: 1px 3px; border-radius: 2px; pointer-events: none; }
         .hidden { display: none !important; }
 
         /* ====================================================== */
-        /* 手機版樣式 */
+        /* 手機版樣式修正 */
         /* ====================================================== */
         @media (max-width: 768px) {
             body { padding: 5px; align-items: flex-start; } 
             .container { width: 100%; padding: 15px 10px; border-radius: 0; }
             .home-large-title h2 { font-size: 1.8rem; }
-            #mainGameView { flex-direction: column; width: 100%; zoom: 1; }
+            #mainGameView { flex-direction: column; width: 100%; zoom: 1; align-items: center; }
             .game-main-content { width: 100%; }
+            
+            /* 手機版成員列表：與平台對齊置中且寬一些 */
+            .user-list-sidebar { 
+                width: 100%; /* 與平台同寬 */
+                margin-top: 15px; 
+                padding: 15px;
+            }
+            .user-badge { 
+                justify-content: center; 
+                display: flex; 
+                align-items: center;
+                padding: 10px; /* 增加高度更易點擊閱讀 */
+                font-size: 1rem;
+            }
+            
             .p-btn { height: 55px; font-size: 1.6rem; } 
             .info-row { flex-direction: column; }
             .promo-btn { width: 100%; }
